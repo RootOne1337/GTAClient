@@ -7,6 +7,9 @@ echo   VirtBot Updater
 echo ========================================
 echo.
 
+REM Change to the directory where this bat file is located
+cd /d "%~dp0"
+
 REM Check if git is installed
 git --version >nul 2>&1
 if errorlevel 1 (
@@ -18,6 +21,7 @@ if errorlevel 1 (
 
 REM Pull latest changes
 echo Pulling latest updates from GitHub...
+echo Working directory: %CD%
 git pull
 
 if errorlevel 1 (
@@ -39,8 +43,8 @@ timeout /t 3
 REM Kill existing VirtBot process
 taskkill /F /IM VirtBot.exe >nul 2>&1
 
-REM Start VirtBot
-start "" VirtBot.exe
+REM Start VirtBot from script directory
+start "" "%~dp0VirtBot.exe"
 
 echo.
 echo VirtBot restarted with new version!

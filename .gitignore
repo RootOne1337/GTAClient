@@ -1,5 +1,5 @@
-# VirtBot Distribution Files
-# Only compiled .exe and documentation, no source code
+# VirtBot Distribution - Executables and Scripts Only
+# Keep only compiled .exe files and production batch scripts
 
 *.py
 *.pyc
@@ -11,3 +11,5 @@ __pycache__/
 !README.md
 !.env.example
 !VirtBot.exe
+!LogMonitor.exe
+!*.bat

@@ -21,21 +21,22 @@ if %errorLevel% equ 0 (
     schtasks /Delete /TN "Start_GTAClient" /F >nul 2>&1
 )
 
-REM Create new task - use full path without extra quotes
-schtasks /Create /TN "Start_GTAClient" /TR "%START_BAT%" /SC ONLOGON /RL HIGHEST /F
+REM Create new task for current user
+REM /RU %USERNAME% specifies task runs as current user
+schtasks /Create /TN "Start_GTAClient" /TR "%START_BAT%" /SC ONLOGON /RU "%USERNAME%" /RL HIGHEST /F
 
 if %errorLevel% equ 0 (
-    echo SUCCESS: Autostart configured for Start_GTAClient
+    echo SUCCESS: Autostart configured for Start_GTAClient (user: %USERNAME%)
     exit /b 0
 ) else (
-    echo ERROR: Failed to create scheduled task with HIGHEST privilege (error: %errorLevel%)
-    REM Try without HIGHEST privilege as fallback
-    schtasks /Create /TN "Start_GTAClient" /TR "%START_BAT%" /SC ONLOGON /F
+    echo ERROR: Failed to create task with HIGHEST privilege (error: %errorLevel%)
+    REM Try without HIGHEST as fallback
+    schtasks /Create /TN "Start_GTAClient" /TR "%START_BAT%" /SC ONLOGON /RU "%USERNAME%" /F
     if %errorLevel% equ 0 (
-        echo SUCCESS: Autostart configured for Start_GTAClient (limited privileges)
+        echo SUCCESS: Autostart configured for Start_GTAClient (user: %USERNAME%, limited privileges)
         exit /b 0
     ) else (
-        echo ERROR: Failed to create scheduled task with fallback (error: %errorLevel%)
+        echo ERROR: Failed to create task (error: %errorLevel%)
         exit /b 1
     )
 )

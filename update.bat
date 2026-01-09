@@ -19,10 +19,14 @@ if errorlevel 1 (
     exit /b 1
 )
 
-REM Pull latest changes
-echo Pulling latest updates from GitHub...
+REM Force update: fetch and reset to match remote
+REM This overwrites local exe files with remote versions
+echo Fetching latest updates from GitHub...
 echo Working directory: %CD%
-git pull
+git fetch origin
+
+echo Resetting to latest version (force overwrite)...
+git reset --hard origin/main
 
 if errorlevel 1 (
     echo.

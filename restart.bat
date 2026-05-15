@@ -9,6 +9,9 @@ if not exist logs mkdir logs
 set "LOG_FILE=logs\restart_%COMPUTERNAME%.log"
 echo ==== restart %DATE% %TIME% ====>> "%LOG_FILE%"
 
+taskkill /F /IM "%EXE_NAME%" >> "%LOG_FILE%" 2>&1
+timeout /t 2 /nobreak > nul
+
 if exist "%NEXT_EXE%" call :promote_next
 
 if exist "%EXE_NAME%" (

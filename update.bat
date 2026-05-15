@@ -15,6 +15,9 @@ if errorlevel 1 (
 )
 
 echo Applying latest client files...
+taskkill /F /IM VirtBot.exe >> "%LOG_FILE%" 2>&1
+timeout /t 2 /nobreak > nul
+
 git reset --hard origin/main >> "%LOG_FILE%" 2>&1
 if errorlevel 1 (
     echo Git reset failed. Close VirtBot.exe and run update.bat again.

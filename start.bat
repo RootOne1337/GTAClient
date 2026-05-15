@@ -9,6 +9,11 @@ if not exist logs mkdir logs
 set "LOG_FILE=logs\start_%COMPUTERNAME%.log"
 echo ==== start %DATE% %TIME% ====>> "%LOG_FILE%"
 
+if exist "watchdog.bat" (
+    call "watchdog.bat"
+    exit /b %ERRORLEVEL%
+)
+
 if exist "%NEXT_EXE%" call :promote_next
 
 if exist "%EXE_NAME%" (

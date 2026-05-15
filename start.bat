@@ -1,28 +1,31 @@
 @echo off
-REM VirtBot Launcher
-REM Simple launcher for VirtBot.exe
-
-echo ========================================
-echo   VirtBot Launcher
-echo ========================================
-echo.
-
-REM Change to the directory where this bat file is located
+setlocal EnableExtensions
 cd /d "%~dp0"
+set "EXE_NAME=VirtBot.exe"
+set "NEXT_EXE=VirtBot.next.exe"
+set "BACKUP_EXE=VirtBot.exe.bak"
 
-REM Check if VirtBot.exe exists
-if not exist "VirtBot.exe" (
-    echo ERROR: VirtBot.exe not found!
-    echo Looking in: %CD%
-    pause
-    exit /b 1
+if not exist logs mkdir logs
+set "LOG_FILE=logs\start_%COMPUTERNAME%.log"
+echo ==== start %DATE% %TIME% ====>> "%LOG_FILE%"
+
+if exist "%NEXT_EXE%" call :promote_next
+
+if exist "%EXE_NAME%" (
+    start "" "%~dp0%EXE_NAME%"
+) else (
+    echo ERROR: %EXE_NAME% not found>> "%LOG_FILE%"
+    echo VirtBot.exe not found
+    timeout /t 10 /nobreak > nul
 )
+exit /b 0
 
-REM Launch VirtBot
-echo Starting VirtBot.exe from: %CD%
-start "" "%~dp0VirtBot.exe"
-
-echo.
-echo VirtBot started!
-echo You can close this window.
-timeout /t 3
+:promote_next
+del /f /q "%BACKUP_EXE%" > nul 2>&1
+if exist "%EXE_NAME%" ren "%EXE_NAME%" "%BACKUP_EXE%" >> "%LOG_FILE%" 2>&1
+if not exist "%EXE_NAME%" (
+    move /y "%NEXT_EXE%" "%EXE_NAME%" >> "%LOG_FILE%" 2>&1
+    if exist "%EXE_NAME%" del /f /q "%BACKUP_EXE%" > nul 2>&1
+)
+if exist "%BACKUP_EXE%" if not exist "%EXE_NAME%" ren "%BACKUP_EXE%" "%EXE_NAME%" > nul 2>&1
+exit /b 0
